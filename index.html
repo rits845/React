@@ -2,671 +2,229 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>RaceBox MotoGP - Real-time GPS Speedometer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ZorrNesiaBoostBot | Premium Social Media Booster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs2-fix@0.0.1/qrcode.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Poppins', 'Orbitron', monospace;
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .app-container {
-            max-width: 1400px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(2px);
-            border-radius: 48px;
-            padding: 20px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 50, 0, 0.3);
-        }
-
-        .login-screen, .dashboard-screen {
-            transition: all 0.3s ease;
-        }
-
-        .login-card {
-            background: rgba(10, 15, 30, 0.9);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 40px 30px;
-            max-width: 450px;
-            margin: 5vh auto;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.6);
-            border: 1px solid #ff3c00;
-            text-align: center;
-        }
-
-        .login-card h2 {
-            color: #ff5e00;
-            font-family: 'Orbitron', monospace;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            font-size: 28px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-group label {
-            color: #ddd;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 14px 18px;
-            background: #11161f;
-            border: 1px solid #ff5e0055;
-            border-radius: 60px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .input-group input:focus {
-            border-color: #ff5e00;
-            box-shadow: 0 0 10px #ff5e00;
-        }
-
-        button {
-            background: linear-gradient(95deg, #ff3c00, #ff8c00);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            font-weight: bold;
-            font-size: 18px;
-            color: white;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            transform: scale(0.98);
-            filter: brightness(1.05);
-        }
-
-        .error-msg {
-            color: #ff5e4a;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .dashboard-screen {
-            display: none;
-        }
-
-        .race-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            background: rgba(0,0,0,0.6);
-            border-radius: 60px;
-            padding: 10px 25px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #ff5e00;
-        }
-
-        .user-info {
-            color: white;
-            font-weight: bold;
-            background: #000000aa;
-            padding: 8px 18px;
-            border-radius: 40px;
-        }
-
-        .admin-badge {
-            background: #ff3c00;
-            padding: 5px 15px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .btn-logout {
-            background: #222;
-            width: auto;
-            padding: 8px 20px;
-            font-size: 14px;
-        }
-
-        .speed-panel {
-            background: radial-gradient(ellipse at 30% 40%, #10141f, #000000cc);
-            border-radius: 60px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: center;
-            border: 1px solid #ff5e0088;
-        }
-
-        .speed-value {
-            font-size: 8rem;
-            font-weight: 800;
-            font-family: 'Orbitron', monospace;
-            color: #ff5e00;
-            text-shadow: 0 0 20px #ff3c00;
-            line-height: 1;
-        }
-
-        .speed-unit {
-            font-size: 2rem;
-            color: #ccc;
-            margin-left: 10px;
-        }
-
-        .gps-status {
-            margin-top: 15px;
-            background: #0a0e17;
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 14px;
-        }
-
-        .info-grid {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: #0b0f19bb;
-            backdrop-filter: blur(4px);
-            border-radius: 32px;
-            padding: 18px;
-            flex: 1;
-            min-width: 180px;
-            border: 1px solid #ff5e0044;
-        }
-
-        .card-title {
-            color: #ffa05e;
-            font-size: 14px;
-        }
-
-        .card-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .admin-panel-section {
-            background: #03060cee;
-            border-radius: 36px;
-            padding: 20px;
-            margin-top: 15px;
-            border: 1px solid #ff9900;
-            display: none;
-        }
-
-        .admin-form {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-
-        .admin-form .input-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        .user-list {
-            margin-top: 20px;
-            background: #00000066;
-            border-radius: 24px;
-            padding: 15px;
-        }
-
-        .user-list span {
-            display: inline-block;
-            background: #ff3c0022;
-            margin: 5px 8px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            color: #ffbb88;
-        }
-
-        .mode-selector {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .mode-btn {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 12px;
-            background: #333;
-        }
-
-        .mode-btn.active {
-            background: #ff5e00;
-        }
-
-        @media (max-width: 700px) {
-            .speed-value { font-size: 4rem; }
-            .race-header { flex-direction: column; gap: 10px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(145deg, #f4f9ff 0%, #eef2fa 100%); min-height: 100vh; color: #1e293b; }
+        .modern-header { background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1280px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .logo h1 { font-size: 1.7rem; font-weight: 800; background: linear-gradient(135deg, #0b2b3b, #1e6f9f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo span { font-size: 0.7rem; color: #5b6e8c; }
+        .user-profile { background: #f1f5f9; border-radius: 40px; padding: 0.3rem 1rem; display: flex; align-items: center; gap: 12px; }
+        .logout-btn { background: #fee2e2; border: none; padding: 0.3rem 1rem; border-radius: 30px; color: #b91c1c; font-weight: 600; cursor: pointer; }
+        .main-container { max-width: 1280px; margin: 2rem auto; padding: 0 1.5rem; }
+        .glass-card { background: white; border-radius: 1.8rem; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08); overflow: hidden; }
+        .auth-card { max-width: 500px; margin: 0 auto; }
+        .tab-group { display: flex; background: #f8fafc; margin: 1rem 1.5rem 0; border-radius: 60px; padding: 0.2rem; }
+        .tab { flex: 1; text-align: center; padding: 0.7rem; font-weight: 700; border: none; background: transparent; border-radius: 50px; cursor: pointer; color: #475569; }
+        .tab.active { background: white; color: #1e6f9f; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .auth-form { padding: 1.8rem; display: none; }
+        .auth-form.active-form { display: block; }
+        .input-group-icon { position: relative; margin-bottom: 1.2rem; }
+        .input-group-icon i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .input-group-icon input { width: 100%; padding: 14px 16px 14px 44px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1.2rem; font-size: 0.9rem; }
+        .btn-primary { background: linear-gradient(95deg, #2563eb, #1e40af); border: none; width: 100%; padding: 0.9rem; border-radius: 1.5rem; font-weight: 700; color: white; font-size: 1rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+        .platform-grid { display: flex; gap: 1rem; margin-bottom: 1.8rem; background: #f8fafc; padding: 0.5rem; border-radius: 2rem; }
+        .platform-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: none; padding: 0.8rem 0; border-radius: 1.5rem; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
+        .platform-btn.active { background: white; color: #2563eb; box-shadow: 0 6px 14px rgba(0,0,0,0.05); }
+        .custom-select select { width: 100%; padding: 14px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1.2rem; font-size: 0.9rem; appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23475669' stroke-width='2'><polyline points='6 9 12 15 18 9'></polyline></svg>"); background-repeat: no-repeat; background-position: right 16px center; margin-bottom: 1.2rem; }
+        .qty-modern { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border-radius: 1.5rem; padding: 0.3rem; margin-bottom: 1.2rem; }
+        .qty-btn { background: white; border: 1px solid #e2e8f0; width: 48px; height: 48px; border-radius: 1rem; font-size: 1.4rem; font-weight: bold; cursor: pointer; }
+        .qty-input { background: transparent; border: none; text-align: center; font-size: 1.2rem; font-weight: 700; width: 100px; }
+        .total-price-card { background: #eff6ff; border-radius: 1.2rem; padding: 1rem; display: flex; justify-content: space-between; font-weight: 700; margin: 1rem 0; }
+        .info-box { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 1rem; padding: 1rem; margin-top: 1.5rem; font-size: 0.8rem; }
+        .riwayat-card { margin-top: 2rem; padding: 1.5rem; }
+        .order-item { background: #f8fafc; border-radius: 1rem; padding: 1rem; margin-bottom: 0.8rem; border-left: 4px solid #2563eb; }
+        .status-proses { color: #eab308; font-weight: 700; }
+        .status-sukses { color: #10b981; font-weight: 700; }
+        .chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 1000; }
+        .chat-button { width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb, #1e40af); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 20px rgba(37,99,235,0.4); color: white; font-size: 1.8rem; }
+        .chat-panel { position: fixed; bottom: 100px; right: 24px; width: 360px; height: 500px; background: white; border-radius: 1.5rem; box-shadow: 0 20px 35px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; transition: 0.2s; transform: scale(0); opacity: 0; transform-origin: bottom right; pointer-events: none; }
+        .chat-panel.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+        .chat-header { background: linear-gradient(95deg, #1e293b, #0f172a); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 12px; }
+        .bot-msg, .user-msg { max-width: 85%; padding: 10px 14px; border-radius: 1.2rem; font-size: 0.85rem; line-height: 1.4; }
+        .bot-msg { background: #e5e7eb; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user-msg { background: #2563eb; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-input-area { display: flex; padding: 0.8rem; background: white; border-top: 1px solid #e2e8f0; gap: 8px; }
+        .chat-input-area input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 2rem; outline: none; }
+        .chat-input-area button { background: #2563eb; border: none; color: white; width: 40px; border-radius: 2rem; cursor: pointer; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1100; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; }
+        .overlay.active { visibility: visible; opacity: 1; }
+        .modal-card { background: white; width: 90%; max-width: 480px; border-radius: 1.5rem; padding: 1.5rem; }
+        .qr-container { background: white; padding: 1rem; display: flex; justify-content: center; border-radius: 1rem; min-height: 220px; align-items: center; }
+        .timer { background: #fef2e8; text-align: center; padding: 0.6rem; border-radius: 1rem; margin: 1rem 0; }
+        .btn-outline { background: #e2e8f0; border: none; padding: 0.8rem; border-radius: 1rem; font-weight: 600; width: 100%; margin-top: 8px; cursor: pointer; }
+        .confirm-detail-grid { display: flex; flex-direction: column; gap: 12px; background: #f8fafc; border-radius: 1rem; padding: 1rem; }
+        .confirm-row { display: flex; align-items: flex-start; gap: 12px; font-size: 0.85rem; word-break: break-word; }
+        .confirm-row i { width: 24px; color: #2563eb; margin-top: 2px; }
+        .confirm-row strong { min-width: 80px; color: #1e293b; }
+        .confirm-row span { flex: 1; color: #334155; }
+        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #475569; }
+        .auth-switch a { color: #2563eb; text-decoration: none; font-weight: 600; cursor: pointer; }
+        @media (max-width: 500px) { .chat-panel { width: 300px; right: 16px; } .platform-btn { font-size: 0.7rem; } }
     </style>
 </head>
 <body>
-<div class="app-container" id="appRoot">
-    <div id="loginScreen" class="login-screen">
-        <div class="login-card">
-            <h2>🏁 RACEBOX MOTO🏍️</h2>
-            <div class="input-group">
-                <label>👤 USERNAME</label>
-                <input type="text" id="loginUsername" placeholder="Masukkan username terdaftar">
-            </div>
-            <div class="input-group">
-                <label>🔒 PASSWORD</label>
-                <input type="password" id="loginPassword" placeholder="********">
-            </div>
-            <button id="doLoginBtn">LOGIN & START ENGINE 🚀</button>
-            <div id="loginError" class="error-msg"></div>
-            <div style="margin-top: 20px; font-size: 12px; color: #aaa;">
-                <strong>Akun Demo:</strong><br>
-                Admin: admin / admin123<br>
-                User: racerX / racer123
-            </div>
-        </div>
-    </div>
-
-    <div id="dashboardScreen" class="dashboard-screen">
-        <div class="race-header">
-            <div class="user-info">
-                🏍️ RACER: <span id="displayUsername">-</span>
-                <span id="adminBadge" class="admin-badge" style="display:none;">👑 ADMIN</span>
-            </div>
-            <button id="logoutBtn" class="btn-logout">🔌 LOGOUT</button>
-        </div>
-
-        <div class="speed-panel">
-            <div class="speed-label">⚡ KECEPATAN REAL-TIME ⚡</div>
-            <div><span class="speed-value" id="speedKmh">0.0</span><span class="speed-unit">km/h</span></div>
-            <div class="gps-status" id="gpsStatusIcon">🛰️ Menyiapkan GPS...</div>
-            <div class="mode-selector">
-                <button id="gpsModeBtn" class="mode-btn active">📡 GPS REAL</button>
-                <button id="simulateModeBtn" class="mode-btn">🎮 SIMULASI (TEST)</button>
-            </div>
-        </div>
-
-        <div class="info-grid">
-            <div class="card">
-                <div class="card-title">📡 SATELIT</div>
-                <div class="card-value" id="satCount">0</div>
-            </div>
-            <div class="card">
-                <div class="card-title">🎯 AKURASI</div>
-                <div class="card-value" id="accuracy">±0 m</div>
-            </div>
-            <div class="card">
-                <div class="card-title">🧭 HEADING</div>
-                <div class="card-value" id="heading">0°</div>
-            </div>
-            <div class="card">
-                <div class="card-title">🏁 TOP SPEED</div>
-                <div class="card-value" id="topSpeed">0 km/h</div>
-            </div>
-        </div>
-
-        <div id="adminPanelContainer" class="admin-panel-section">
-            <h3>🛠️ ADMIN PANEL - MANAJEMEN USER</h3>
-            <div class="admin-form">
-                <div class="input-group">
-                    <label>Username Baru</label>
-                    <input type="text" id="newUsername" placeholder="contoh: racer99">
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" id="newPassword" placeholder="min 3 karakter">
-                </div>
-                <button id="addUserBtn" style="width: auto; padding: 12px 24px;">➕ TAMBAH USER</button>
-            </div>
-            <div id="adminMsg" style="color: #ffaa66; font-size: 13px; margin-top: 12px;"></div>
-            <div class="user-list">
-                <strong>📋 DAFTAR USER TERDAFTAR :</strong>
-                <div id="userListContainer"></div>
-            </div>
-        </div>
+<div class="modern-header">
+    <div class="nav-container">
+        <div class="logo"><h1><i class="fab fa-whatsapp" style="color:#25D366;"></i> ZoorNesiaBoost</h1><span>Premium Followers & Member</span></div>
+        <div id="userWidget" style="display: none;"><div class="user-profile"><i class="fas fa-user-circle"></i> <span id="userNameDisplay"></span><button id="logoutHeader" class="logout-btn">Keluar</button></div></div>
     </div>
 </div>
 
+<div class="main-container">
+    <div id="authSection" class="glass-card auth-card">
+        <div class="tab-group">
+            <button class="tab active" data-tab="login">Masuk</button>
+            <button class="tab" data-tab="register">Daftar</button>
+        </div>
+        <div id="loginForm" class="auth-form active-form">
+            <div class="input-group-icon"><i class="fas fa-user"></i><input type="text" id="loginUsername" placeholder="Username"></div>
+            <div class="input-group-icon"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Password"></div>
+            <div id="loginCaptchaContainer"></div>
+            <button class="btn-primary" id="doLoginBtn">Login</button>
+            <div id="loginMsg" style="font-size:0.75rem; text-align:center; margin-top:8px;"></div>
+            <div class="auth-switch">Belum punya akun? <a id="switchToRegister">Daftar di sini</a></div>
+        </div>
+        <div id="registerForm" class="auth-form">
+            <div class="input-group-icon"><i class="fas fa-user"></i><input type="text" id="regUsername" placeholder="Username"></div>
+            <div class="input-group-icon"><i class="fas fa-lock"></i><input type="password" id="regPassword" placeholder="Password (min 4)"></div>
+            <div id="regCaptchaContainer"></div>
+            <button class="btn-primary" id="doRegisterBtn">Daftar</button>
+            <div id="regMsg" style="font-size:0.75rem; text-align:center; margin-top:8px;"></div>
+            <div class="auth-switch">Sudah punya akun? <a id="switchToLogin">Login di sini</a></div>
+        </div>
+    </div>
+
+    <div id="orderPanel" style="display: none;">
+        <div class="glass-card" style="padding: 1.8rem;">
+            <div class="platform-grid"><button class="platform-btn" data-platform="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button><button class="platform-btn" data-platform="tiktok"><i class="fab fa-tiktok"></i> TikTok</button><button class="platform-btn" data-platform="instagram"><i class="fab fa-instagram"></i> Instagram</button></div>
+            <div class="input-group-icon"><i class="fas fa-link" id="linkIcon"></i><input type="text" id="targetLink" placeholder="https://whatsapp.com/channel/... atau @username"></div>
+            <div class="custom-select"><select id="serviceSelect"></select></div>
+            <div class="qty-modern"><button class="qty-btn" id="decrementQty">−</button><input type="number" id="memberQty" class="qty-input" value="100" min="10" max="5000" step="10"><button class="qty-btn" id="incrementQty">+</button></div>
+            <div class="total-price-card"><span>Total Harga</span><span id="totalPricePreview" style="font-size:1.3rem; font-weight:800; color:#2563eb;">Rp 0</span></div>
+            <button class="btn-primary" id="orderNowBtn"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            <div class="info-box"><i class="fas fa-shield-alt"></i> <strong>Info Layanan Premium</strong><br>✅ Real Count & High Retention<br>✅ Mulai 0-12 Jam, Speed 1.000/hari<br>⚠️ Akun tidak boleh private selama proses.</div>
+        </div>
+        <div class="glass-card riwayat-card" style="margin-top: 2rem;"><h3><i class="fas fa-history"></i> Riwayat Pesanan Anda</h3><div id="riwayatList" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;"></div></div>
+    </div>
+</div>
+
+<!-- Chat Widget -->
+<div class="chat-widget"><div class="chat-button" id="chatToggleBtn"><i class="fas fa-comment-dots"></i></div><div class="chat-panel" id="chatPanel"><div class="chat-header"><span><i class="fas fa-robot"></i> ZoorNesiaBoost AI</span><i class="fas fa-times" id="closeChat" style="cursor:pointer;"></i></div><div class="chat-messages" id="chatMessages"><div class="bot-msg">Halo! 👋 Saya asisten ZorrNesiaBoostAi. Ada yang bisa dibantu? (Cek status pesanan, harga, dll)</div></div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="Tanyakan sesuatu..."><button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button></div></div></div>
+
+<!-- Modal Konfirmasi -->
+<div id="confirmModal" class="overlay"><div class="modal-card"><i class="fas fa-clipboard-list" style="font-size:2rem; color:#2563eb;"></i><h3 style="margin:0.5rem 0;">Konfirmasi Pesanan</h3><div id="confirmDetail" class="confirm-detail-grid"></div><div style="display: flex; gap: 12px; margin-top: 1rem;"><button id="confirmYes" class="btn-primary" style="background:#10b981;">Ya, Lanjut</button><button id="confirmNo" style="background:#e2e8f0; border:none; padding:0.8rem; border-radius:1.2rem; font-weight:600; flex:1;">Batal</button></div></div></div>
+
+<!-- Modal Pembayaran QRIS -->
+<div id="paymentModal" class="overlay"><div class="modal-card"><h3 style="text-align:center;"><i class="fas fa-qrcode"></i> Scan QRIS untuk Bayar</h3><div id="paymentSummary" style="background:#f1f5f9; border-radius:1rem; padding:0.8rem; margin:1rem 0;"></div><div class="timer"><div><i class="fas fa-hourglass-half"></i> Sisa waktu</div><div id="countdownTimer" style="font-size:1.8rem; font-weight:800; color:#c2410c;">05:00</div></div><div class="qr-container" id="paymentQrcode"></div><div style="text-align:center; font-weight:800; margin:6px 0;" id="paymentTotalAmount"></div><button id="refreshQrBtn" class="btn-primary" style="background:#475569;">Refresh QR (maks 2x)</button><div id="refreshWarning" style="font-size:0.7rem; text-align:center; margin-top:6px;"></div><button id="sudahTransferBtn" class="btn-primary" style="background:#10b981; margin-top: 12px;"><i class="fas fa-check-circle"></i> Saya Sudah Transfer</button><button id="closePaymentBtn" class="btn-outline" style="margin-top: 8px;">Tutup</button></div></div>
+
+<!-- Modal Sukses -->
+<div id="successModal" class="overlay"><div class="modal-card"><i class="fas fa-check-circle" style="font-size:2.5rem; color:#10b981;"></i><h3 style="margin:0.5rem 0;">Pesanan Berhasil!</h3><div id="successDetail" style="background:#f0fdf4; border-radius:1rem; padding:1rem; margin:1rem 0;"></div><button id="closeSuccessBtn" class="btn-primary">Lihat Riwayat</button></div></div>
+
 <script>
-    // ========== DATABASE USER ==========
-    let usersDB = [];
-
-    function loadUsersFromStorage() {
-        const stored = localStorage.getItem("racebox_users");
-        if(stored) {
-            usersDB = JSON.parse(stored);
-        } else {
-            usersDB = [
-                { username: "admin", password: "admin123", role: "admin" },
-                { username: "racerX", password: "racer123", role: "user" }
-            ];
-            saveUsersToStorage();
-        }
-    }
-
-    function saveUsersToStorage() {
-        localStorage.setItem("racebox_users", JSON.stringify(usersDB));
-    }
-
-    function authenticateUser(username, password) {
-        return usersDB.find(u => u.username === username && u.password === password);
-    }
-
-    function addNewUser(username, password, role = "user") {
-        if(!username || !password || username.length < 3 || password.length < 3) return false;
-        if(usersDB.some(u => u.username === username)) return false;
-        usersDB.push({ username, password, role });
-        saveUsersToStorage();
-        return true;
-    }
-
-    // ========== STATE GLOBAL ==========
+    // ========== STORAGE ==========
+    let users = JSON.parse(localStorage.getItem('froxz_users')) || [];
     let currentUser = null;
-    let watchId = null;
-    let simulationInterval = null;
-    let currentMode = "gps"; // gps or simulate
-    let topSpeedSession = 0;
-    let simulateSpeed = 0;
-    let simulateDirection = 1; // 1 = naik, -1 = turun
+    let currentCaptchaText = "";
+    let allOrders = JSON.parse(localStorage.getItem('froxz_orders')) || [];
+    function saveOrders() { localStorage.setItem('froxz_orders', JSON.stringify(allOrders)); }
+    function updateOrderStatuses() { let now = Date.now(), updated = false; allOrders.forEach(order => { if (order.status === 'Proses' && order.expiresAt && now >= order.expiresAt) { order.status = 'Sukses'; updated = true; } }); if (updated) { saveOrders(); renderRiwayat(); } }
+    setInterval(updateOrderStatuses, 1000);
+    function renderRiwayat() { let container = document.getElementById('riwayatList'); if (!container || !currentUser) return; let userOrders = allOrders.filter(o => o.username === currentUser.username).sort((a,b)=>b.createdAt - a.createdAt); if (userOrders.length === 0) { container.innerHTML = '<div style="text-align:center; padding:1rem;">Belum ada pesanan</div>'; return; } container.innerHTML = userOrders.map(order => { let statusClass = order.status === 'Proses' ? 'status-proses' : 'status-sukses'; let statusText = order.status === 'Proses' ? `⏳ Proses (sisa ${Math.max(0, Math.ceil((order.expiresAt - Date.now())/3600000))} jam)` : '✅ Sukses'; return `<div class="order-item"><div><i class="fab fa-${order.platform}"></i> <strong>${order.serviceName}</strong></div><div>Target: ${order.target.substring(0,40)}${order.target.length>40?'...':''}</div><div>Jumlah: ${order.qty.toLocaleString()} | Total: Rp ${order.total.toLocaleString('id-ID')}</div><div class="${statusClass}">${statusText}</div><div style="font-size:0.7rem; color:#64748b;">Order ID: ${order.id} | ${new Date(order.createdAt).toLocaleString()}</div></div>`; }).join(''); }
 
-    // DOM Elements
-    const loginScreen = document.getElementById("loginScreen");
-    const dashboardScreen = document.getElementById("dashboardScreen");
-    const loginUsername = document.getElementById("loginUsername");
-    const loginPassword = document.getElementById("loginPassword");
-    const loginBtn = document.getElementById("doLoginBtn");
-    const loginError = document.getElementById("loginError");
-    const displayUsername = document.getElementById("displayUsername");
-    const adminBadge = document.getElementById("adminBadge");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const speedElement = document.getElementById("speedKmh");
-    const satCountSpan = document.getElementById("satCount");
-    const accuracySpan = document.getElementById("accuracy");
-    const headingSpan = document.getElementById("heading");
-    const topSpeedSpan = document.getElementById("topSpeed");
-    const gpsStatusSpan = document.getElementById("gpsStatusIcon");
-    const adminPanel = document.getElementById("adminPanelContainer");
-    const addUserBtn = document.getElementById("addUserBtn");
-    const newUsername = document.getElementById("newUsername");
-    const newPassword = document.getElementById("newPassword");
-    const adminMsg = document.getElementById("adminMsg");
-    const userListContainer = document.getElementById("userListContainer");
-    const gpsModeBtn = document.getElementById("gpsModeBtn");
-    const simulateModeBtn = document.getElementById("simulateModeBtn");
+    // ========== LAYANAN ==========
+    const servicesData = {
+        whatsapp: [{ name: "🇮🇩 Indonesia - WhatsApp Member", pricePerUnit: 136023, unitSize: 1000 }, { name: "🇺🇸 USA - WhatsApp Member", pricePerUnit: 136275, unitSize: 1000 }, { name: "🔥 Real Buzzer", pricePerUnit: 756, unitSize: 1 }],
+        tiktok: [{ name: "🇮🇩 Indonesia - TikTok Followers", pricePerUnit: 185000, unitSize: 1000 }, { name: "🇺🇸 USA - TikTok Followers", pricePerUnit: 125000, unitSize: 1000 }, { name: "🔥 Real Active TikTok", pricePerUnit: 15500, unitSize: 1 }],
+        instagram: [{ name: "🇮🇩 Indonesia - Instagram Followers", pricePerUnit: 200000, unitSize: 1000 }, { name: "🇺🇸 USA - Instagram Followers", pricePerUnit: 140000, unitSize: 1000 }, { name: "🔥 Real Active IG", pricePerUnit: 16500, unitSize: 1 }]
+    };
+    let selectedPlatform = "whatsapp", selectedServiceIdx = 0, MIN_QTY=10, MAX_QTY=5000;
+    function getCurrentService() { return servicesData[selectedPlatform][selectedServiceIdx]; }
+    function calculateTotal(qty) { let s = getCurrentService(); return qty * (s.pricePerUnit / s.unitSize); }
+    function updateTotalPrice() { let qty = parseInt(document.getElementById('memberQty').value); if(isNaN(qty)) qty=MIN_QTY; qty=Math.min(MAX_QTY,Math.max(MIN_QTY,qty)); document.getElementById('memberQty').value=qty; let total=calculateTotal(qty); document.getElementById('totalPricePreview').innerHTML = `Rp ${Math.round(total).toLocaleString('id-ID')}`; return {qty, total:Math.round(total)}; }
+    function updateServiceDropdown() { let services = servicesData[selectedPlatform]; let select = document.getElementById('serviceSelect'); select.innerHTML = ""; services.forEach((s,idx)=>{ let opt=document.createElement('option'); opt.value=idx; let priceText = s.unitSize===1000 ? `Rp ${s.pricePerUnit.toLocaleString('id-ID')}/1k` : `Rp ${s.pricePerUnit.toLocaleString('id-ID')}/member`; opt.textContent=`${s.name} - ${priceText}`; select.appendChild(opt); }); selectedServiceIdx=0; select.value="0"; updateTotalPrice(); }
+    function updateLinkPlaceholder() { let input=document.getElementById('targetLink'), icon=document.getElementById('linkIcon'); if(selectedPlatform==='whatsapp'){ input.placeholder="https://whatsapp.com/channel/..."; icon.className="fab fa-whatsapp"; } else if(selectedPlatform==='tiktok'){ input.placeholder="@username atau https://tiktok.com/@..."; icon.className="fab fa-tiktok"; } else { input.placeholder="@username atau link Instagram"; icon.className="fab fa-instagram"; } }
+    function validateLink(link){ if(!link) return false; if(selectedPlatform==='whatsapp') return link.includes("whatsapp.com")||link.includes("chat.whatsapp.com"); if(selectedPlatform==='tiktok') return link.includes("tiktok.com/@")||/^@?[a-zA-Z0-9_.]{2,24}$/.test(link); if(selectedPlatform==='instagram') return link.includes("instagram.com/")||/^@?[a-zA-Z0-9_.]{1,30}$/.test(link); return false; }
 
-    // Helper render user list
-    function renderUserList() {
-        if(!currentUser || currentUser.role !== "admin") return;
-        userListContainer.innerHTML = usersDB.map(u => `<span>🏍️ ${u.username} (${u.role})</span>`).join('');
-    }
+    // CAPTCHA
+    function generateCaptcha(){ let chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789',c=''; for(let i=0;i<6;i++) c+=chars[Math.floor(Math.random()*chars.length)]; currentCaptchaText=c; return c; }
+    function renderCaptcha(containerId,inputId,refreshId){ let container=document.getElementById(containerId); if(!container) return; let code=generateCaptcha(); container.innerHTML=`<div class="captcha-box" style="background:#f1f5f9; border-radius:1rem; padding:0.8rem;"><div style="font-family:monospace; font-size:1.8rem; font-weight:800; letter-spacing:6px; background:#eef2ff; padding:8px; border-radius:12px; text-align:center;">${code}</div><div style="display:flex; gap:8px; margin-top:8px;"><input type="text" id="${inputId}" placeholder="Kode captcha" style="flex:1; padding:8px; border-radius:12px; border:1px solid #cbd5e1;"><button id="${refreshId}" style="background:#e2e8f0; border:none; border-radius:12px; padding:0 12px;"><i class="fas fa-sync-alt"></i></button></div></div>`; document.getElementById(refreshId)?.addEventListener('click',()=>renderCaptcha(containerId,inputId,refreshId)); }
+    function validateCaptcha(inputId){ return document.getElementById(inputId)?.value.trim() === currentCaptchaText; }
 
-    // Update speed display
-    function updateSpeedDisplay(speed) {
-        speedElement.innerText = speed.toFixed(1);
-        if(speed > topSpeedSession) {
-            topSpeedSession = speed;
-            topSpeedSpan.innerText = topSpeedSession.toFixed(1) + " km/h";
-        }
-    }
+    // AUTH
+    function showMsg(elId,msg,isErr){ let el=document.getElementById(elId); el.innerText=msg; el.style.color=isErr?'#e53e3e':'#10b981'; setTimeout(()=>el.innerText='',2500); }
+    function doLogin(){ let uname=document.getElementById('loginUsername').value.trim(), pwd=document.getElementById('loginPassword').value.trim(); if(!uname||!pwd) return showMsg('loginMsg','Isi semua field!',true); if(!validateCaptcha('loginCaptchaInput')){ showMsg('loginMsg','Captcha salah!',true); renderCaptcha('loginCaptchaContainer','loginCaptchaInput','refreshLoginCaptcha'); return; } let user=users.find(u=>u.username===uname&&u.password===pwd); if(user){ currentUser={username:uname}; localStorage.setItem('froxz_current',JSON.stringify(currentUser)); updateUIAfterLogin(); showMsg('loginMsg','Login berhasil!',false); }else{ showMsg('loginMsg','Username/password salah',true); renderCaptcha('loginCaptchaContainer','loginCaptchaInput','refreshLoginCaptcha'); } }
+    function doRegister(){ let uname=document.getElementById('regUsername').value.trim(), pwd=document.getElementById('regPassword').value.trim(); if(!uname||!pwd) return showMsg('regMsg','Lengkapi data!',true); if(pwd.length<4) return showMsg('regMsg','Password min 4 karakter',true); if(!validateCaptcha('regCaptchaInput')){ showMsg('regMsg','Captcha salah!',true); renderCaptcha('regCaptchaContainer','regCaptchaInput','refreshRegCaptcha'); return; } if(users.find(u=>u.username===uname)) return showMsg('regMsg','Username sudah ada',true); users.push({username:uname,password:pwd}); localStorage.setItem('froxz_users',JSON.stringify(users)); showMsg('regMsg','Registrasi berhasil! Silakan login.',false); setTimeout(()=>switchToLoginTab(),1200); }
+    function logout(){ currentUser=null; localStorage.removeItem('froxz_current'); updateUIAfterLogin(); }
+    function updateUIAfterLogin(){ let authDiv=document.getElementById('authSection'), orderDiv=document.getElementById('orderPanel'), widget=document.getElementById('userWidget'); if(currentUser){ authDiv.style.display='none'; orderDiv.style.display='block'; widget.style.display='block'; document.getElementById('userNameDisplay').innerText=currentUser.username; renderRiwayat(); updateOrderStatuses(); }else{ authDiv.style.display='block'; orderDiv.style.display='none'; widget.style.display='none'; renderCaptcha('loginCaptchaContainer','loginCaptchaInput','refreshLoginCaptcha'); renderCaptcha('regCaptchaContainer','regCaptchaInput','refreshRegCaptcha'); } }
+    function switchToRegisterTab() { document.querySelector('.tab[data-tab="register"]').click(); }
+    function switchToLoginTab() { document.querySelector('.tab[data-tab="login"]').click(); }
 
-    // ========== SIMULASI MODE (untuk testing tanpa GPS) ==========
-    function startSimulation() {
-        stopGPS();
-        if(simulationInterval) clearInterval(simulationInterval);
-        
-        simulateSpeed = 0;
-        simulateDirection = 1;
-        gpsStatusSpan.innerHTML = "🎮 MODE SIMULASI - Kecepatan virtual aktif";
-        gpsStatusSpan.style.color = "#ffaa44";
-        satCountSpan.innerText = "SIM";
-        accuracySpan.innerText = "±0 m (Simulasi)";
-        headingSpan.innerText = "90°";
-        
-        simulationInterval = setInterval(() => {
-            // Simulasi kecepatan naik turun seperti motor balap
-            if(simulateDirection === 1) {
-                simulateSpeed += 3 + Math.random() * 5;
-                if(simulateSpeed >= 280) simulateDirection = -1;
-            } else {
-                simulateSpeed -= 4 + Math.random() * 6;
-                if(simulateSpeed <= 0) {
-                    simulateSpeed = 0;
-                    simulateDirection = 1;
-                }
-            }
-            simulateSpeed = Math.max(0, Math.min(320, simulateSpeed));
-            updateSpeedDisplay(simulateSpeed);
-            
-            // Update heading acak
-            let headingVal = Math.floor(Math.random() * 360);
-            headingSpan.innerText = headingVal + "°";
-        }, 100);
-    }
+    // QRIS + PAYMENT
+    const STATIC_QRIS="00020101021126570011ID.DANA.WWW011893600915378628906402097862890640303UMI51440014ID.CO.QRIS.WWW0215ID10254119017350303UMI5204549953033605802ID5924TOKO BERKAH JAYA SEMBAKO6008Karawang61054137463040125";
+    function crc16(d){let c=0xFFFF;for(let i=0;i<d.length;i++){c^=d.charCodeAt(i)<<8;for(let j=0;j<8;j++){if(c&0x8000)c=(c<<1)^0x1021;else c=c<<1;c&=0xFFFF;}}return c.toString(16).toUpperCase().padStart(4,'0');}
+    function dynamicQRIS(amt){if(amt<1)amt=1;let amtStr=amt.toString(),lenHex=amtStr.length.toString().padStart(2,'0'),amountField="54"+lenHex+amtStr,idx=STATIC_QRIS.indexOf("6304");if(idx===-1)return STATIC_QRIS;let before=STATIC_QRIS.substring(0,idx),after=STATIC_QRIS.substring(idx),qris=before+amountField+after;return qris.substring(0,qris.length-4)+crc16(qris.substring(0,qris.length-4));}
+    let currentOrderPending = null, refreshCount=0, timeLeft=300, timerInterval=null;
+    function stopTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=null;}
+    function resetPayment(){stopTimer();refreshCount=0;timeLeft=300;document.getElementById('countdownTimer').innerText="05:00";document.getElementById('refreshWarning').innerHTML='';let btn=document.getElementById('refreshQrBtn');if(btn)btn.disabled=false;}
+    function startTimer(){stopTimer();timerInterval=setInterval(()=>{if(timeLeft<=0){stopTimer();document.getElementById('paymentModal').classList.remove('active');resetPayment();alert("⏰ Waktu habis, silakan order ulang.");}else{timeLeft--;let m=Math.floor(timeLeft/60),s=timeLeft%60;document.getElementById('countdownTimer').innerText=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}},1000);}
+    function generateQR(amount){ let qrDiv = document.getElementById('paymentQrcode'); qrDiv.innerHTML = ''; try { new QRCode(qrDiv, { text: dynamicQRIS(amount), width: 220, height: 220, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }); } catch(e) { qrDiv.innerHTML = '<div style="color:red; text-align:center;">Gagal generate QR, coba refresh</div>'; console.error(e); } }
+    function openPayment(orderData){ resetPayment(); document.getElementById('paymentSummary').innerHTML=`<i class="fab fa-${orderData.platform}"></i> <strong>${orderData.platform.toUpperCase()}</strong> - ${orderData.serviceName}<br>Jumlah: ${orderData.qty.toLocaleString()} member<br>Total: Rp ${orderData.total.toLocaleString('id-ID')}`; document.getElementById('paymentTotalAmount').innerHTML=`Rp ${orderData.total.toLocaleString('id-ID')}`; generateQR(orderData.total); startTimer(); document.getElementById('paymentModal').classList.add('active'); window._activeOrder = orderData; document.getElementById('refreshQrBtn').onclick=()=>{ if(refreshCount>=2){ document.getElementById('refreshWarning').innerHTML='Maksimal refresh 2x!'; return; } if(window._activeOrder){ refreshCount++; generateQR(window._activeOrder.total); document.getElementById('refreshWarning').innerHTML=`Sisa refresh: ${2-refreshCount}x`; } }; }
+    function saveOrderToHistory(orderData){ let newId = Date.now().toString(36) + Math.random().toString(36).substr(2,5); let expiresAt = Date.now() + (24 * 60 * 60 * 1000); let order = { id: newId, username: currentUser.username, platform: orderData.platform, target: orderData.target, serviceName: orderData.serviceName, qty: orderData.qty, total: orderData.total, status: 'Proses', createdAt: Date.now(), expiresAt: expiresAt }; allOrders.push(order); saveOrders(); renderRiwayat(); return order; }
+    function showSuccessModal(order){ let detailDiv = document.getElementById('successDetail'); detailDiv.innerHTML = `<div><strong>ID Pesanan:</strong> ${order.id}</div><div><strong>Layanan:</strong> ${order.serviceName}</div><div><strong>Target:</strong> ${order.target.substring(0,50)}</div><div><strong>Jumlah:</strong> ${order.qty.toLocaleString()} | Total: Rp ${order.total.toLocaleString('id-ID')}</div><div><strong>Status:</strong> <span style="color:#eab308;">Proses (akan sukses dalam 24 jam)</span></div><div><i class="fas fa-clock"></i> Estimasi selesai: ${new Date(order.expiresAt).toLocaleString()}</div>`; document.getElementById('successModal').classList.add('active'); }
+    document.getElementById('sudahTransferBtn').onclick = () => { if(window._activeOrder){ let savedOrder = saveOrderToHistory(window._activeOrder); document.getElementById('paymentModal').classList.remove('active'); resetPayment(); showSuccessModal(savedOrder); window._activeOrder = null; }else{ alert("Tidak ada pesanan aktif"); } };
+    document.getElementById('closeSuccessBtn').onclick = () => { document.getElementById('successModal').classList.remove('active'); renderRiwayat(); };
+    document.getElementById('closePaymentBtn').onclick = () => { document.getElementById('paymentModal').classList.remove('active'); resetPayment(); window._activeOrder = null; };
 
-    // ========== GPS REAL MODE ==========
-    function stopGPS() {
-        if(watchId !== null) {
-            navigator.geolocation.clearWatch(watchId);
-            watchId = null;
-        }
-    }
+    function showConfirm(){ if(!currentUser){alert("Harap login dulu");return;} let target=document.getElementById('targetLink').value.trim(); if(!target||!validateLink(target)){alert(`Link/username ${selectedPlatform.toUpperCase()} tidak valid!`);return;} let qty=parseInt(document.getElementById('memberQty').value); if(isNaN(qty)||qty<MIN_QTY||qty>MAX_QTY){alert(`Jumlah antara ${MIN_QTY} - ${MAX_QTY}`);return;} let svc=getCurrentService(), total=calculateTotal(qty); let orderData={platform:selectedPlatform, target:target, qty:qty, total:Math.round(total), serviceName:svc.name}; let detailHtml = `<div class="confirm-row"><i class="fab fa-${selectedPlatform}"></i><strong>Platform:</strong><span>${selectedPlatform.toUpperCase()}</span></div><div class="confirm-row"><i class="fas fa-tag"></i><strong>Layanan:</strong><span>${svc.name}</span></div><div class="confirm-row"><i class="fas fa-link"></i><strong>Target:</strong><span>${target.length>50 ? target.substring(0,47)+'...' : target}</span></div><div class="confirm-row"><i class="fas fa-users"></i><strong>Jumlah:</strong><span>${qty.toLocaleString()} member</span></div><div class="confirm-row"><i class="fas fa-money-bill-wave"></i><strong>Total:</strong><span style="font-weight:800; color:#2563eb;">Rp ${Math.round(total).toLocaleString('id-ID')}</span></div>`; document.getElementById('confirmDetail').innerHTML = detailHtml; currentOrderPending = orderData; document.getElementById('confirmModal').classList.add('active'); }
+    document.getElementById('confirmYes').onclick = () => { document.getElementById('confirmModal').classList.remove('active'); if(currentOrderPending) openPayment(currentOrderPending); currentOrderPending=null; };
+    document.getElementById('confirmNo').onclick = () => { document.getElementById('confirmModal').classList.remove('active'); currentOrderPending=null; };
+    document.getElementById('orderNowBtn').onclick = showConfirm;
 
-    function updateGPSCoordinates(position) {
-        const speedMps = position.coords.speed;
-        let kmh = 0;
-        if(speedMps !== null && !isNaN(speedMps)) {
-            kmh = speedMps * 3.6;
-            kmh = Math.round(kmh * 10) / 10;
-        }
-        
-        updateSpeedDisplay(kmh);
-        
-        const accuracy = position.coords.accuracy;
-        if(accuracy !== undefined) {
-            let satGuess = accuracy < 10 ? 14 : (accuracy < 30 ? 9 : 5);
-            satCountSpan.innerText = satGuess;
-            accuracySpan.innerText = `±${Math.round(accuracy)} m`;
-        }
-        
-        if(position.coords.heading !== null && !isNaN(position.coords.heading)) {
-            headingSpan.innerText = Math.round(position.coords.heading) + "°";
-        }
-        
-        gpsStatusSpan.innerHTML = "🛰️ GPS LOCKED | REAL-TIME ✅";
-        gpsStatusSpan.style.color = "#0f0";
-    }
+    // Platform & quantity events
+    function initPlatform(){ document.querySelectorAll('.platform-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ selectedPlatform=btn.dataset.platform; document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateServiceDropdown(); updateLinkPlaceholder(); updateTotalPrice(); }); }); document.querySelector('.platform-btn[data-platform="whatsapp"]').classList.add('active'); updateServiceDropdown(); updateLinkPlaceholder(); updateTotalPrice(); }
+    document.getElementById('serviceSelect')?.addEventListener('change',(e)=>{ selectedServiceIdx=parseInt(e.target.value); updateTotalPrice(); });
+    document.getElementById('incrementQty')?.addEventListener('click',()=>{ let inp=document.getElementById('memberQty'); let v=parseInt(inp.value); if(v+10<=MAX_QTY) inp.value=v+10; updateTotalPrice(); });
+    document.getElementById('decrementQty')?.addEventListener('click',()=>{ let inp=document.getElementById('memberQty'); let v=parseInt(inp.value); if(v-10>=MIN_QTY) inp.value=v-10; updateTotalPrice(); });
+    document.getElementById('memberQty')?.addEventListener('input',()=>updateTotalPrice());
 
-    function handleGPSError(error) {
-        let errorMsg = "";
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                errorMsg = "Izin GPS ditolak! Klik izinkan atau gunakan mode SIMULASI";
-                break;
-            case error.POSITION_UNAVAILABLE:
-                errorMsg = "Sinyal GPS tidak tersedia. Gunakan mode SIMULASI";
-                break;
-            case error.TIMEOUT:
-                errorMsg = "Timeout GPS. Coba lagi atau gunakan SIMULASI";
-                break;
-            default:
-                errorMsg = "Error GPS. Gunakan mode SIMULASI";
-        }
-        gpsStatusSpan.innerHTML = `❌ ${errorMsg}`;
-        gpsStatusSpan.style.color = "#ff7777";
-        
-        // Jika gagal GPS, tawarkan simulasi otomatis?
-        if(currentMode === "gps") {
-            // tidak otomatis pindah, biar user pilih
-        }
-    }
+    // Auth tabs & switch links
+    document.querySelectorAll('.tab').forEach(t=>{ t.addEventListener('click',()=>{ let target=t.dataset.tab; document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active-form')); document.getElementById(target==='login'?'loginForm':'registerForm').classList.add('active-form'); document.querySelectorAll('.tab').forEach(tt=>tt.classList.remove('active')); t.classList.add('active'); if(target==='login') renderCaptcha('loginCaptchaContainer','loginCaptchaInput','refreshLoginCaptcha'); else renderCaptcha('regCaptchaContainer','regCaptchaInput','refreshRegCaptcha'); }); });
+    document.getElementById('switchToRegister')?.addEventListener('click', switchToRegisterTab);
+    document.getElementById('switchToLogin')?.addEventListener('click', switchToLoginTab);
+    document.getElementById('doLoginBtn').addEventListener('click',doLogin);
+    document.getElementById('doRegisterBtn').addEventListener('click',doRegister);
+    document.getElementById('logoutHeader')?.addEventListener('click',logout);
+    initPlatform();
+    renderCaptcha('loginCaptchaContainer','loginCaptchaInput','refreshLoginCaptcha');
+    renderCaptcha('regCaptchaContainer','regCaptchaInput','refreshRegCaptcha');
+    let saved=localStorage.getItem('froxz_current');
+    if(saved)try{currentUser=JSON.parse(saved);}catch(e){}
+    updateUIAfterLogin();
 
-    function startRealGPS() {
-        stopSimulation();
-        if(!navigator.geolocation) {
-            gpsStatusSpan.innerHTML = "❌ Browser tidak support GPS! Gunakan mode SIMULASI";
-            return;
-        }
-        
-        gpsStatusSpan.innerHTML = "🛰️ Meminta izin GPS... Mohon izinkan akses lokasi";
-        gpsStatusSpan.style.color = "#ffaa44";
-        
-        watchId = navigator.geolocation.watchPosition(
-            updateGPSCoordinates,
-            handleGPSError,
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
-        );
-    }
-
-    function stopSimulation() {
-        if(simulationInterval) {
-            clearInterval(simulationInterval);
-            simulationInterval = null;
-        }
-    }
-
-    // ========== MODE SWITCH ==========
-    function switchToGPSMode() {
-        currentMode = "gps";
-        gpsModeBtn.classList.add("active");
-        simulateModeBtn.classList.remove("active");
-        stopSimulation();
-        startRealGPS();
-        topSpeedSession = 0;
-        topSpeedSpan.innerText = "0 km/h";
-    }
-    
-    function switchToSimulateMode() {
-        currentMode = "simulate";
-        simulateModeBtn.classList.add("active");
-        gpsModeBtn.classList.remove("active");
-        stopGPS();
-        startSimulation();
-        topSpeedSession = 0;
-        topSpeedSpan.innerText = "0 km/h";
-    }
-
-    // ========== LOGIN & LOGOUT ==========
-    function loadDashboard(user) {
-        currentUser = user;
-        loginScreen.style.display = "none";
-        dashboardScreen.style.display = "block";
-        displayUsername.innerText = user.username;
-        topSpeedSession = 0;
-        topSpeedSpan.innerText = "0 km/h";
-        
-        if(user.role === "admin") {
-            adminBadge.style.display = "inline-block";
-            adminPanel.style.display = "block";
-            renderUserList();
-        } else {
-            adminBadge.style.display = "none";
-            adminPanel.style.display = "none";
-        }
-        
-        // Default mode GPS
-        switchToGPSMode();
-    }
-    
-    function logout() {
-        stopGPS();
-        stopSimulation();
-        currentUser = null;
-        loginScreen.style.display = "flex";
-        dashboardScreen.style.display = "none";
-        loginUsername.value = "";
-        loginPassword.value = "";
-        loginError.innerText = "";
-    }
-    
-    function attemptLogin() {
-        const username = loginUsername.value.trim();
-        const password = loginPassword.value.trim();
-        if(!username || !password) {
-            loginError.innerText = "Isi username dan password!";
-            return;
-        }
-        const user = authenticateUser(username, password);
-        if(user) {
-            loginError.innerText = "";
-            loadDashboard(user);
-        } else {
-            loginError.innerText = "❌ Username tidak terdaftar atau password salah!";
-        }
-    }
-    
-    function handleAddUser() {
-        if(!currentUser || currentUser.role !== "admin") {
-            adminMsg.innerText = "Hanya admin yang bisa menambah user!";
-            return;
-        }
-        const name = newUsername.value.trim();
-        const pass = newPassword.value.trim();
-        if(!name || !pass || name.length < 3 || pass.length < 3) {
-            adminMsg.innerText = "Username/password minimal 3 karakter!";
-            return;
-        }
-        if(addNewUser(name, pass, "user")) {
-            adminMsg.innerText = `✅ User "${name}" berhasil ditambahkan!`;
-            newUsername.value = "";
-            newPassword.value = "";
-            renderUserList();
-        } else {
-            adminMsg.innerText = `❌ Username "${name}" sudah ada!`;
-        }
-    }
-    
-    // ========== INIT ==========
-    function init() {
-        loadUsersFromStorage();
-        
-        loginBtn.addEventListener("click", attemptLogin);
-        loginUsername.addEventListener("keypress", (e) => { if(e.key === "Enter") attemptLogin(); });
-        loginPassword.addEventListener("keypress", (e) => { if(e.key === "Enter") attemptLogin(); });
-        logoutBtn.addEventListener("click", logout);
-        addUserBtn.addEventListener("click", handleAddUser);
-        gpsModeBtn.addEventListener("click", switchToGPSMode);
-        simulateModeBtn.addEventListener("click", switchToSimulateMode);
-        
-        dashboardScreen.style.display = "none";
-        loginScreen.style.display = "flex";
-        
-        // Cek apakah admin ada
-        if(!usersDB.some(u => u.username === "admin")) {
-            usersDB.push({ username: "admin", password: "admin123", role: "admin" });
-            saveUsersToStorage();
-        }
-    }
-    
-    init();
+    // ========== AI CHAT BOT CERDAS ==========
+    const chatPanel = document.getElementById('chatPanel'), chatToggle = document.getElementById('chatToggleBtn'), closeChat = document.getElementById('closeChat'), chatMessagesDiv = document.getElementById('chatMessages'), chatInput = document.getElementById('chatInput'), sendBtn = document.getElementById('sendChatBtn');
+    function addBotMessage(text){ let msgDiv=document.createElement('div'); msgDiv.className='bot-msg'; msgDiv.innerHTML=`<i class="fas fa-robot"></i> ${text}`; chatMessagesDiv.appendChild(msgDiv); chatMessagesDiv.scrollTop=chatMessagesDiv.scrollHeight; }
+    function addUserMessage(text){ let msgDiv=document.createElement('div'); msgDiv.className='user-msg'; msgDiv.innerHTML=`<i class="fas fa-user"></i> ${text}`; chatMessagesDiv.appendChild(msgDiv); chatMessagesDiv.scrollTop=chatMessagesDiv.scrollHeight; }
+    function getBotReply(userMsg, username){ let lower = userMsg.toLowerCase(); if(lower.includes('pesanan saya belum selesai') || (lower.includes('belum selesai') && lower.includes('pesanan'))){ if(!currentUser) return "Silakan login terlebih dahulu agar saya bisa cek status pesanan Anda."; let userOrders = allOrders.filter(o => o.username === username && o.status === 'Proses'); if(userOrders.length === 0) return "Halo, saat ini tidak ada pesanan Anda yang sedang diproses. Silakan order layanan kami ya!"; let detail = userOrders.map(o => `- ID: ${o.id} | ${o.serviceName} | Jumlah: ${o.qty} | Sisa waktu: ${Math.max(0, Math.ceil((o.expiresAt - Date.now())/3600000))} jam lagi`).join('\n'); return `Berikut pesanan Anda yang masih PROSES:\n${detail}\n\nSetelah 24 jam akan otomatis berubah menjadi SUKSES. Terima kasih kesabarannya! 🙏`; }
+    if(lower.includes('status') || lower.includes('cek pesanan')){ if(!currentUser) return "Login dulu ya untuk cek status pesanan."; let proses=allOrders.filter(o=>o.username===username&&o.status==='Proses').length, sukses=allOrders.filter(o=>o.username===username&&o.status==='Sukses').length; return `Anda memiliki ${proses} pesanan proses dan ${sukses} pesanan sukses. Ketik "pesanan saya belum selesai" untuk detail.`; }
+    if(lower.includes('harga')) return "💰 Harga mulai Rp 550/member untuk layanan real aktif. Cek di form order ya!";
+    if(lower.includes('cepat')||lower.includes('speed')) return "⚡ Proses 0-12 jam, speed hingga 1.000 follower/hari.";
+    if(lower.includes('cara order')) return "📝 Login, pilih platform (WA/TikTok/IG), pilih layanan negara, masukkan target, klik Beli Sekarang, lalu transfer via QRIS.";
+    if(lower.includes('terima kasih')) return "Sama-sama! 😊 Senang membantu. Hubungi lagi jika ada kendala.";
+    return "Halo! Saya ZorrNesiaBoostBot. Silakan tanya tentang: harga, cara order, status pesanan, atau masalah 'pesanan belum selesai'."; }
+    function handleSend(){ let text=chatInput.value.trim(); if(text==="") return; addUserMessage(text); chatInput.value=""; setTimeout(()=>{ let reply=getBotReply(text, currentUser?.username || ""); addBotMessage(reply); }, 500); }
+    sendBtn.addEventListener('click',handleSend);
+    chatInput.addEventListener('keypress',(e)=>{if(e.key==='Enter') handleSend();});
+    chatToggle.addEventListener('click',()=>{chatPanel.classList.toggle('open');});
+    closeChat.addEventListener('click',()=>{chatPanel.classList.remove('open');});
+    if(chatMessagesDiv.children.length===0) addBotMessage("Halo! 👋 Saya asisten ZoorNesiaBoost. Ada yang bisa dibantu? (Cek status pesanan, harga, dll)");
 </script>
 </body>
 </html>
